@@ -1,20 +1,25 @@
-from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView
 # from authenticate.forms import RegisterForm
-# from authenticate.models import User
+from authenticate.models import User
+from authenticate.forms import UserForm
 
 
 # Create your views here.
 
 
 class Login(LoginView):
-    pass
+    template_name = 'authenticate/login.html'
+    redirect_authenticated_user = True
 
 
 class Logout(LogoutView):
-    pass
+    template_name = 'authenticate/logout.html'
 
 
 class Register(CreateView):
-    pass
+    model = User
+    template_name = 'authenticate/register.html'
+    form_class = UserForm
+    success_url = 'login/'

@@ -20,7 +20,6 @@ class CinemaHall(models.Model):
 
 class Movie(models.Model):
     name = models.CharField(max_length=200)
-    # session = models.OneToOneField(Session, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.name}'
@@ -35,6 +34,8 @@ class Session(models.Model):
     ticket_price = models.DecimalField(max_digits=4, decimal_places=2)
     cinema_hall = models.ForeignKey(CinemaHall, on_delete=models.CASCADE)
     movie = models.OneToOneField(Movie, on_delete=models.CASCADE)
+    # rental_duration = models.DurationField()
+    # movie_duration = models.DurationField()
 
     def __str__(self):
         return f'{self.name}'
