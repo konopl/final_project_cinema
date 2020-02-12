@@ -34,6 +34,7 @@ class Session(models.Model):
     ticket_price = models.DecimalField(max_digits=4, decimal_places=2)
     cinema_hall = models.ForeignKey(CinemaHall, on_delete=models.CASCADE)
     movie = models.OneToOneField(Movie, on_delete=models.CASCADE)
+    # rent_start = models.DateField(null=True)
     # rental_duration = models.DurationField()
     # movie_duration = models.DurationField()
 
@@ -50,3 +51,5 @@ class Ticket(models.Model):
         return f'{self.session}'
 
 
+# class Taras(models.Model):
+#     date = models.DateField()

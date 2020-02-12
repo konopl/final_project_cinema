@@ -28,3 +28,7 @@ class BuyTicket(CreateView):
     model = Ticket
     http_method_names = ['post', 'get']
     success_url = '/'
+
+
+class CreateCinemaHall(CreateView):
+    pass

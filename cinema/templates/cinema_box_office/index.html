@@ -2,11 +2,11 @@
 
 {% block content %}
     {% if request.user.is_superuser %}
-    {{ session }}
+    {{ Session.object.all}}
         {% include 'cinema_box_office/admin.html' %}
     {% elif not request.user.is_superuser and request.user.is_authenticated %}
         {% include 'cinema_box_office/user.html' %}
     {% else %}
-        You are not authorized user <a href="{% url 'login' %}">Log in</a>
+        You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
     {% endif %}
 {% endblock %}

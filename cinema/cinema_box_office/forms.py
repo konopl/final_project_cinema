@@ -1,15 +1,12 @@
 from django.forms import ModelForm, DateInput, TimeInput
 from .models import Session
+from django import forms
 
 
 class SessionForm(ModelForm):
     class Meta:
-        # widgets = {
-        #     'rental_start_at': DateInput(),
-        #     'start_at': TimeInput,
-        # }
         model = Session
-        fields = [
+        fields = (
             'name',
             'start_at',
             'end_at',
@@ -18,4 +15,7 @@ class SessionForm(ModelForm):
             'ticket_price',
             'cinema_hall',
             'movie',
-            ]
+        )
+        # widgets = {
+        #     'rental_start_at': forms.DateField(widget=DateInput),
+        # }
