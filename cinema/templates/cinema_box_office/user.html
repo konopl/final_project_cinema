@@ -1,13 +1,11 @@
-
+{% extends 'base.html' %}
 
 {% block content %}
-    {% for object in object_list %}
+    
     <form action="{% url 'buy_ticket' %}" method="POST">
         {% csrf_token %}
-        {{ object.movie }}
-        <input type="number">
+        {{ form.as_p }}
         <input type="submit" value="buy ticket">
     </form>
-    {% endfor %}
-    форма для просмотра информации по показам и покупки билетов
+
 {% endblock %}

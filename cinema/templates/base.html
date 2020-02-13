@@ -59,21 +59,7 @@
             </ul>
         </div>
     </nav>
-    
-    <h6>Список показов</h6>
-    {% for object in object_list %}
-    <form action="{% url 'buy_ticket' %}" method="POST">
-        {% csrf_token %}
-        {{ object.movie }}
-        {% if request.user.is_authenticated and not request.user.is_superuser %}
-            <input type="number">
-            <input type="submit" value="buy ticket">
-        
-        {% endif %}
-        
-    </form>
-    {% endfor %}
-    
+
     {% block content %}
     
     {% endblock %}

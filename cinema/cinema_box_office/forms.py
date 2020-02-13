@@ -1,5 +1,5 @@
-from django.forms import ModelForm, DateInput, TimeInput
-from .models import Session, CinemaHall
+from django.forms import ModelForm, DateInput, TimeInput, DateTimeInput
+from .models import Session, CinemaHall, Ticket
 
 
 class SessionForm(ModelForm):
@@ -15,6 +15,18 @@ class SessionForm(ModelForm):
             'cinema_hall',
             'movie',
         )
+        widgets = {
+            'rental_start_at': DateInput(format='%d/%m/%Y', attrs={
+                'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'rental_end_at': DateInput(format='%d/%m/%Y', attrs={
+                'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'start_at': DateTimeInput(format="%d/%m/%Y %H:%M:%S", attrs={
+                'placeholder': "DD/MM/YYYY HH:MM:SS",
+                'type': 'datetime'}),
+            'end_at': DateTimeInput(format="%d/%m/%Y %H:%M:%S", attrs={
+                'placeholder': "DD/MM/YYYY HH:MM:SS",
+                'type': 'datetime'})
+        }
         # widgets = {
         #     'rental_start_at': forms.DateField(widget=DateInput),
         # }
@@ -26,4 +38,14 @@ class CinemaHallForm(ModelForm):
         fields = (
             'name',
             'size',
+        )
+
+
+class TicketForm(ModelForm):
+    class Meta:
+        model = Ticket
+        fields = (
+            'quantity',
+            'session',
+            'user',
         )

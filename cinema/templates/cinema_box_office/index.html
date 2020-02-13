@@ -2,11 +2,14 @@
 
 {% block content %}
     {% if request.user.is_superuser %}
-    {{ Session.object.all}}
+        {% include 'cinema_box_office/session_list.html' %}
         {% include 'cinema_box_office/admin.html' %}
     {% elif not request.user.is_superuser and request.user.is_authenticated %}
-        {% include 'cinema_box_office/user.html' %}
+        <!-- {% include 'cinema_box_office/user.html' %} -->
+        {% include 'cinema_box_office/session_list.html' %}
+        <a href="{% url 'buy_ticket' %}">buy ticket</a>
     {% else %}
+        {% include 'cinema_box_office/session_list.html' %}
         You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
     {% endif %}
 {% endblock %}

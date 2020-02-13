@@ -43,7 +43,7 @@ class Session(models.Model):
 
 
 class Ticket(models.Model):
-    quantity = models.IntegerField
+    quantity = models.IntegerField(null=True)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView
 from .models import Session, Ticket, CinemaHall
-from .forms import SessionForm, CinemaHallForm
+from .forms import SessionForm, CinemaHallForm, TicketForm
 
 # Create your views here.
 
@@ -28,6 +28,8 @@ class BuyTicket(CreateView):
     model = Ticket
     http_method_names = ['post', 'get']
     success_url = '/'
+    form_class = TicketForm
+    template_name = 'cinema_box_office/user.html'
 
 
 class CreateCinemaHall(CreateView):
