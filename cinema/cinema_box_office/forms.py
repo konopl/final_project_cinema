@@ -1,6 +1,5 @@
 from django.forms import ModelForm, DateInput, TimeInput
-from .models import Session
-from django import forms
+from .models import Session, CinemaHall
 
 
 class SessionForm(ModelForm):
@@ -19,3 +18,12 @@ class SessionForm(ModelForm):
         # widgets = {
         #     'rental_start_at': forms.DateField(widget=DateInput),
         # }
+
+
+class CinemaHallForm(ModelForm):
+    class Meta:
+        model = CinemaHall
+        fields = (
+            'name',
+            'size',
+        )

@@ -3,19 +3,19 @@ from authenticate.models import User
 
 # Create your models here.
 
-HALL_COLOR = (
-    ('green', 'Green'),
-    ('red', 'Red'),
-    ('blue', 'Blue')
-)
+# HALL_COLOR = (
+#     ('green', 'Green'),
+#     ('red', 'Red'),
+#     ('blue', 'Blue')
+# )
 
 
 class CinemaHall(models.Model):
-    name = models.CharField(choices=HALL_COLOR, max_length=100)
+    name = models.CharField(max_length=100)
     size = models.IntegerField()
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name} - {self.size}'
 
 
 class Movie(models.Model):

@@ -1,10 +1,8 @@
 
 
 {% block content %}
-<form action=" {% url 'create_session' %} " method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="create">
-</form>
+
+<a href="{% url 'create_session' %} " >create session </a>
+<a href="{% url 'create_cinema_hall' %} " >create cinema hall </a>
 
 {% endblock %}
