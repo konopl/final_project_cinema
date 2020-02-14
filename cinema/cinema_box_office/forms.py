@@ -27,9 +27,6 @@ class SessionForm(ModelForm):
                 'placeholder': "DD/MM/YYYY HH:MM:SS",
                 'type': 'datetime'})
         }
-        # widgets = {
-        #     'rental_start_at': forms.DateField(widget=DateInput),
-        # }
 
 
 class CinemaHallForm(ModelForm):
