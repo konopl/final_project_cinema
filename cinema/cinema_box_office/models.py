@@ -38,6 +38,9 @@ class Session(models.Model):
     # rental_duration = models.DurationField()
     # movie_duration = models.DurationField()
 
+    class Meta:
+        ordering = ['-start_at', ]
+
     def __str__(self):
         return f'{self.name}'
 

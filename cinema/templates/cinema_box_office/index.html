@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     {% if request.user.is_superuser %}
         {% include 'cinema_box_office/session_list.html' %}
         {% include 'cinema_box_office/admin.html' %}
