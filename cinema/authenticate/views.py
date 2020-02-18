@@ -22,4 +22,4 @@ class Register(CreateView):
     model = User
     template_name = 'authenticate/register.html'
     form_class = UserForm
-    success_url = 'login/'
+    success_url = '/authenticate/login/'

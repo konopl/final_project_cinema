@@ -1,16 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+    <h6> Session list </h6>
+    {% for a in session1 %}
+        <form action="{%  url 'buy_ticket' %}" method="POST">
+            {% csrf_token %}
+            {{ a }} - {{ a.movie }} - {{ a.cinema_hall.name }} - {{ a.start_at }}
+            {% if not request.user.is_superuser and request.user.is_authenticated %}
+                <input type="number" name="quantity" id="">
+                <input type="hidden" name="user" value="{request.user.id}">
+                <input type="hidden" name="session" value="a">
+                <input type="submit" value="buy ticket">
+            {% endif %}
+        </form>
+    {% endfor %}
     {% if request.user.is_superuser %}
+        {% include 'cinema_box_office/admin.html' %}
+    {% elif not request.user.is_superuser and request.user.is_authenticated %}
+        <a href="{% url 'basket' %}"> View purchases </a>
+    {% else %}
+        You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
+    {% endif %}
+    
+{% endblock %}
+
+<!-- {% if request.user.is_superuser %}
         {% include 'cinema_box_office/session_list.html' %}
         {% include 'cinema_box_office/admin.html' %}
     {% elif not request.user.is_superuser and request.user.is_authenticated %}
-        <!-- {% include 'cinema_box_office/user.html' %} -->
+        <!-- {% include 'cinema_box_office/user.html' %} 
         {% include 'cinema_box_office/session_list.html' %}
         <a href="{% url 'buy_ticket' %}">buy ticket</a>
     {% else %}
         {% include 'cinema_box_office/session_list.html' %}
         You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
-    {% endif %}
-{% endblock %}
+    {% endif %} -->
