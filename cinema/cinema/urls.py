@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from cinema_box_office.views import SessionViewSet
+
+router = routers.DefaultRouter()
+router.register(r'session', SessionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('authenticate/', include('authenticate.urls')),
     path('', include('cinema_box_office.urls')),
+    path('', include(router.urls)),
 
 ]

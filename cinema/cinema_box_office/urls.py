@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (Poster, CreateSession, BuyTicket, CreateCinemaHall,
                     CreateMovie, BasketListView, UpdateSession, DeleteSession)
 
+
 urlpatterns = [
     path('', Poster.as_view(), name='poster'),
     path('create_session/', CreateSession.as_view(), name='create_session'),

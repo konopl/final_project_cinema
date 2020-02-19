@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authenticate',
     'cinema_box_office',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

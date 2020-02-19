@@ -6,6 +6,8 @@ from datetime import datetime
 import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from rest_framework import routers, serializers, viewsets, permissions
+from cinema_box_office.api.serializer import SessionSerializer
 
 
 # Create your views here.
@@ -36,6 +38,12 @@ class Poster(ListView):
                 })
         context = self.get_context_data()
         return self.render_to_response(context)
+
+
+class SessionViewSet(viewsets.ModelViewSet):
+    queryset = Session.objects.all()
+    serializer_class = SessionSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class CreateSession(CreateView, LoginRequiredMixin):
