@@ -1,17 +1,14 @@
 from django.shortcuts import render, HttpResponse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Session, Ticket, CinemaHall, Movie
 from .forms import SessionForm, TicketForm, CinemaHallForm, CreateMovieForm
 from datetime import datetime
 import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
 
 # Create your views here.
-
-
-# def poster(request):
-#     return render(request, 'cinema_box_office/index.html')
 
 
 class Poster(ListView):
@@ -47,6 +44,7 @@ class CreateSession(CreateView, LoginRequiredMixin):
     form_class = SessionForm
     http_method_names = ['post', 'get']
     success_url = '/'
+
     login_url = '/authenticate/login/'
 
     def dispatch(self, request, *args, **kwargs):
@@ -76,6 +74,20 @@ class CreateSession(CreateView, LoginRequiredMixin):
         else:
             self.object = form.save()
             return super().form_valid(form)
+
+
+class UpdateSession(UpdateView):
+    model = Session
+    form_class = SessionForm
+    template_name = 'cinema_box_office/create_session.html'
+
+    def get_success_url(self):
+        return reverse('poster')
+
+
+class DeleteSession(DeleteView):
+    model = Session
+    template_name = 'cinema_box_office/delete_session.html'
 
 
 class BuyTicket(CreateView, LoginRequiredMixin):
@@ -127,4 +139,9 @@ class CreateMovie(CreateView, LoginRequiredMixin):
 
 
 class BasketListView(ListView):
-    pass
+    model = Ticket
+    context_object_name = 'tickets'
+    template_name = 'cinema_box_office/basket.html'
+
+    def get_queryset(self):
+        return Ticket.objects.filter(user=self.request.user)

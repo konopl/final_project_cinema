@@ -2,6 +2,10 @@
 
 {% block content %}
 
-{{ Ticket.objects.all() }} 
+{% for ticket in tickets %}
+    <form action="">
+    {{ ticket }} - {{ ticket.quantity }}
+    </form>
+{% endfor %}
 
-{% endblock %}
+    {% endblock %}

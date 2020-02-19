@@ -11,6 +11,9 @@
                 <input type="hidden" name="user" value="{request.user.id}">
                 <input type="hidden" name="session" value="a">
                 <input type="submit" value="buy ticket">
+            {% elif request.user.is_superuser %}
+                <a href="{% url 'update_session' pk=a.id %}"> update </a>
+                <a href="{% url 'delete_session' pk=a.id %}"> delete </a>
             {% endif %}
         </form>
     {% endfor %}
@@ -35,3 +38,9 @@
         {% include 'cinema_box_office/session_list.html' %}
         You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
     {% endif %} -->
+
+
+
+
+
+   
