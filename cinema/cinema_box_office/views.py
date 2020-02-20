@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from rest_framework import routers, serializers, viewsets, permissions
 from cinema_box_office.api.serializer import SessionSerializer
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -19,7 +20,7 @@ class Poster(ListView):
     # form_class = SessionForm
     http_method_names = ['get']
     # queryset = Session.objects.all()
-    context_object_name = 'session1'
+    context_object_name = 'session_list'
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -87,15 +88,29 @@ class CreateSession(CreateView, LoginRequiredMixin):
 class UpdateSession(UpdateView):
     model = Session
     form_class = SessionForm
-    template_name = 'cinema_box_office/create_session.html'
+    template_name = 'cinema_box_office/update_session.html'
+    success_url = reverse_lazy('poster')
 
-    def get_success_url(self):
-        return reverse('poster')
+    # def get_success_url(self):
+    #     return reverse('poster')
 
 
 class DeleteSession(DeleteView):
     model = Session
     template_name = 'cinema_box_office/delete_session.html'
+    success_url = reverse_lazy('poster')
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     # Try to dispatch to the right method; if a method doesn't exist,
+    #     # defer to the error handler. Also defer to the error handler if the
+    #     # request method isn't on the approved list.
+    #     # import pdb
+    #     # pdb.set_trace()
+    #     if request.method.lower() in self.http_method_names:
+    #         handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+    #     else:
+    #         handler = self.http_method_not_allowed
+    #     return handler(request, *args, **kwargs)
 
 
 class BuyTicket(CreateView, LoginRequiredMixin):

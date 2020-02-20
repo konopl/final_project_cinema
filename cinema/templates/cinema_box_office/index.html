@@ -2,18 +2,18 @@
 
 {% block content %}
     <h6> Session list </h6>
-    {% for a in session1 %}
+    {% for object in session_list %}
         <form action="{%  url 'buy_ticket' %}" method="POST">
             {% csrf_token %}
-            {{ a }} - {{ a.movie }} - {{ a.cinema_hall.name }} - {{ a.start_at }}
+            {{ object }} - {{ object.movie }} - {{ object.cinema_hall.name }} - {{ object.start_at }}
             {% if not request.user.is_superuser and request.user.is_authenticated %}
                 <input type="number" name="quantity" id="">
                 <input type="hidden" name="user" value="{request.user.id}">
                 <input type="hidden" name="session" value="a">
                 <input type="submit" value="buy ticket">
             {% elif request.user.is_superuser %}
-                <a href="{% url 'update_session' pk=a.id %}"> update </a>
-                <a href="{% url 'delete_session' pk=a.id %}"> delete </a>
+                <a href="{% url 'update_session' pk=object.id %}"> update </a>
+                <a href="{% url 'delete_session' pk=object.id %}"> delete </a>
             {% endif %}
         </form>
     {% endfor %}

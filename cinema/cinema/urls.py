@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from cinema_box_office.views import SessionViewSet
+from authenticate.views import UserViewSet
 
 router = routers.DefaultRouter()
 router.register(r'session', SessionViewSet)
+router.register(r'auth', UserViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
