@@ -42,10 +42,7 @@ class TicketForm(ModelForm):
     class Meta:
         model = Ticket
         fields = (
-            'quantity',
-            'session',
-            'user',
-        )
+            'quantity',        )
 
 
 class CreateMovieForm(ModelForm):

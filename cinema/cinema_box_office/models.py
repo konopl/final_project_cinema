@@ -53,6 +53,17 @@ class Ticket(models.Model):
     def __str__(self):
         return f'{self.session}'
 
+    # def get_cost(self):
+    #     return self.session.price * self.amount
 
-# class Taras(models.Model):
-#     date = models.DateField()
+    # def buy(self, price, quantity, session):
+    #     # buy and add to total_bonuses
+    #     self.buyer.bonuses -= price * int(quantity)
+    #     self.buyer.save()
+    #     self.session.available_seats -= int(quantity)
+    #     self.session.save()
+    #     self.buyer.total_bonuses += price * int(quantity)
+    #     self.buyer.save()
+
+    # def __str__(self):
+    #     return f"Ticket of film '{self.session.film.name}' at {self.session.time_from}"

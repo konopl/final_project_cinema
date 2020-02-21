@@ -2,16 +2,9 @@
 
 {% block content %}
     
-    <form action="{% url 'buy_ticket' %}" method="POST">
+    <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="buy ticket">
     </form>
 {% endblock %}
-
-
-    <!-- <input type="number" value="" name="quantity">
-        <input type="radio" value="" name="session">
-        <input type="hidden" name="request.user">
-         -->
-    

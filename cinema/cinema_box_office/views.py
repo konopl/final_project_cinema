@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Session, Ticket, CinemaHall, Movie
 from .forms import SessionForm, TicketForm, CinemaHallForm, CreateMovieForm
@@ -9,7 +9,7 @@ from django.urls import reverse
 from rest_framework import routers, serializers, viewsets, permissions
 from cinema_box_office.api.serializer import SessionSerializer
 from django.urls import reverse_lazy
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Create your views here.
 
@@ -44,7 +44,7 @@ class Poster(ListView):
 class SessionViewSet(viewsets.ModelViewSet):
     queryset = Session.objects.all()
     serializer_class = SessionSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class CreateSession(CreateView, LoginRequiredMixin):
@@ -73,8 +73,8 @@ class CreateSession(CreateView, LoginRequiredMixin):
             for obj in (Session.objects.filter(cinema_hall=form.data['cinema_hall'])):
                 start_from_object = local.localize(datetime.strptime(str(obj.start_at), '%Y-%m-%d %H:%M:%S'))
                 end_from_object = local.localize(datetime.strptime(str(obj.end_at), '%Y-%m-%d %H:%M:%S'))
-                # import pdb
-                # pdb.set_trace()
+                import pdb
+                pdb.set_trace()
                 if ((start_new_session >= start_from_object) and (start_new_session <= end_from_object)) or ((end_new_session >= start_from_object) and (end_new_session <= end_from_object)):
                     return HttpResponse('  гавно собачье ')
                 else:
@@ -91,26 +91,11 @@ class UpdateSession(UpdateView):
     template_name = 'cinema_box_office/update_session.html'
     success_url = reverse_lazy('poster')
 
-    # def get_success_url(self):
-    #     return reverse('poster')
-
 
 class DeleteSession(DeleteView):
     model = Session
     template_name = 'cinema_box_office/delete_session.html'
     success_url = reverse_lazy('poster')
-
-    # def dispatch(self, request, *args, **kwargs):
-    #     # Try to dispatch to the right method; if a method doesn't exist,
-    #     # defer to the error handler. Also defer to the error handler if the
-    #     # request method isn't on the approved list.
-    #     # import pdb
-    #     # pdb.set_trace()
-    #     if request.method.lower() in self.http_method_names:
-    #         handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
-    #     else:
-    #         handler = self.http_method_not_allowed
-    #     return handler(request, *args, **kwargs)
 
 
 class BuyTicket(CreateView, LoginRequiredMixin):
@@ -119,9 +104,14 @@ class BuyTicket(CreateView, LoginRequiredMixin):
     success_url = '/'
     form_class = TicketForm
     template_name = 'cinema_box_office/user.html'
+    success_url = reverse_lazy('poster')
+    session = None
+
     login_url = '/authenticate/login/'
 
     def dispatch(self, request, *args, **kwargs):
+        # userrt = self.request.user
+        # sessi = self.session
         # import pdb
         # pdb.set_trace()
         if not request.user.is_authenticated:
@@ -129,10 +119,27 @@ class BuyTicket(CreateView, LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        obj = form.save(commit=False)
+        from cinema_box_office.models import Session
+        session_from_form = form.data['session']
+        movie_from_session = Session.objects.get(id=session_from_form)
+        movie_cost = movie_from_session.ticket_price
+        ticket_quantity = int(form.data['quantity'])
+        user_bil = movie_cost * ticket_quantity
+        self.request.user.wallet -= user_bil
+        self.request.user.save()
+        obj.user = self.request.user
+        obj.session = movie_from_session
+        cinema_hall = movie_from_session.cinema_hall
+        cinema_hall.size -= ticket_quantity
+        cinema_hall.save()
+        print(obj.session.cinema_hall.size)
+        obj.save()
+        print(obj.session.cinema_hall.size)
         # import pdb
         # pdb.set_trace()
-        self.object = form.save()
-        return super().form_valid(form)
+
+        return HttpResponseRedirect('/')
 
 
 class CreateCinemaHall(CreateView, LoginRequiredMixin):
