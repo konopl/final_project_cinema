@@ -5,14 +5,14 @@
     {% for object in session_list %}
         <form action="{%  url 'buy_ticket' %}" method="POST">
             {% csrf_token %}
-            {{ object }} - {{ object.movie }} - {{ object.cinema_hall.name }} - {{ object.start_at }} - {{ object.cinema_hall.size }} доступно мест
+            {{ object }} - {{ object.movie }} - {{ object.cinema_hall.name }} - {{ object.start_at }} - {{ object.cinema_hall.size }} доступно мест - {{ object.ticket_price }} цена билета
             {% if not request.user.is_superuser and request.user.is_authenticated %}
                 <input type="number" name="quantity" id="">
                 <input type="hidden" name="session" value="{{ object.id }}">
                 <input type="submit" value="buy ticket">
             {% elif request.user.is_superuser %}
-                <a href="{% url 'update_session' pk=object.id %}"> update </a>
-                <a href="{% url 'delete_session' pk=object.id %}"> delete </a>
+                    <a href="{% url 'update_session' pk=object.id %}"> update </a>
+                    <a href="{% url 'delete_session' pk=object.id %}"> delete </a>
             {% endif %}
         </form>
     {% endfor %}
@@ -26,20 +26,3 @@
     
 {% endblock %}
 
-<!-- {% if request.user.is_superuser %}
-        {% include 'cinema_box_office/session_list.html' %}
-        {% include 'cinema_box_office/admin.html' %}
-    {% elif not request.user.is_superuser and request.user.is_authenticated %}
-        <!-- {% include 'cinema_box_office/user.html' %} 
-        {% include 'cinema_box_office/session_list.html' %}
-        <a href="{% url 'buy_ticket' %}">buy ticket</a>
-    {% else %}
-        {% include 'cinema_box_office/session_list.html' %}
-        You are not authorized user <a href="{% url 'login' %}">Log in </a> or <a href="{% url 'register' %}"> Register</a>
-    {% endif %} -->
-
-
-
-
-
-   

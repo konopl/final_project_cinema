@@ -14,6 +14,7 @@ class SessionForm(ModelForm):
             'ticket_price',
             'cinema_hall',
             'movie',
+            'seats',
         )
         widgets = {
             'rental_start_at': DateInput(format='%d/%m/%Y', attrs={
@@ -42,7 +43,7 @@ class TicketForm(ModelForm):
     class Meta:
         model = Ticket
         fields = (
-            'quantity',        )
+            'quantity',)
 
 
 class CreateMovieForm(ModelForm):

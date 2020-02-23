@@ -34,9 +34,7 @@ class Session(models.Model):
     ticket_price = models.DecimalField(max_digits=5, decimal_places=2)
     cinema_hall = models.ForeignKey(CinemaHall, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    # rent_start = models.DateField(null=True)
-    # rental_duration = models.DurationField()
-    # movie_duration = models.DurationField()
+    seats = models.PositiveIntegerField(blank=True,null=True)
 
     class Meta:
         ordering = ['-start_at', ]
@@ -52,18 +50,3 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f'{self.session}'
-
-    # def get_cost(self):
-    #     return self.session.price * self.amount
-
-    # def buy(self, price, quantity, session):
-    #     # buy and add to total_bonuses
-    #     self.buyer.bonuses -= price * int(quantity)
-    #     self.buyer.save()
-    #     self.session.available_seats -= int(quantity)
-    #     self.session.save()
-    #     self.buyer.total_bonuses += price * int(quantity)
-    #     self.buyer.save()
-
-    # def __str__(self):
-    #     return f"Ticket of film '{self.session.film.name}' at {self.session.time_from}"

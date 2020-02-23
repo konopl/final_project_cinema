@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Session, Ticket, CinemaHall, Movie
 from .forms import SessionForm, TicketForm, CinemaHallForm, CreateMovieForm
@@ -17,18 +17,13 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 class Poster(ListView):
     model = Session
     template_name = 'cinema_box_office/index.html'
-    # form_class = SessionForm
     http_method_names = ['get']
-    # queryset = Session.objects.all()
     context_object_name = 'session_list'
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
         if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
             if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
                 is_empty = not self.object_list.exists()
             else:
@@ -91,11 +86,29 @@ class UpdateSession(UpdateView):
     template_name = 'cinema_box_office/update_session.html'
     success_url = reverse_lazy('poster')
 
+    def form_valid(self, form):
+        seats_in_hall = int(form.data['seats'])
+        remaining_seats = int(form.data['cinema_hall'])
+        sess = Session.objects.get(cinema_hall=remaining_seats)
+        if sess.cinema_hall.size < seats_in_hall:
+            return HttpResponse('You cant change this session')
+        self.object = form.save()
+        return super().form_valid(form)
+
 
 class DeleteSession(DeleteView):
     model = Session
     template_name = 'cinema_box_office/delete_session.html'
     success_url = reverse_lazy('poster')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        if self.object.cinema_hall.size < self.object.seats:
+            return HttpResponse('You cant delete this session')
+        import pdb
+        pdb.set_trace()
+        return self.render_to_response(context)
 
 
 class BuyTicket(CreateView, LoginRequiredMixin):
@@ -110,22 +123,19 @@ class BuyTicket(CreateView, LoginRequiredMixin):
     login_url = '/authenticate/login/'
 
     def dispatch(self, request, *args, **kwargs):
-        # userrt = self.request.user
-        # sessi = self.session
-        # import pdb
-        # pdb.set_trace()
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        from cinema_box_office.models import Session
         session_from_form = form.data['session']
         movie_from_session = Session.objects.get(id=session_from_form)
         movie_cost = movie_from_session.ticket_price
         ticket_quantity = int(form.data['quantity'])
         user_bil = movie_cost * ticket_quantity
+        if int(self.request.user.wallet) < int(user_bil):
+            return HttpResponse(' you dont have maney')
         self.request.user.wallet -= user_bil
         self.request.user.save()
         obj.user = self.request.user
@@ -133,11 +143,7 @@ class BuyTicket(CreateView, LoginRequiredMixin):
         cinema_hall = movie_from_session.cinema_hall
         cinema_hall.size -= ticket_quantity
         cinema_hall.save()
-        print(obj.session.cinema_hall.size)
         obj.save()
-        print(obj.session.cinema_hall.size)
-        # import pdb
-        # pdb.set_trace()
 
         return HttpResponseRedirect('/')
 
